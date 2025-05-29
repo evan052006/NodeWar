@@ -31,6 +31,12 @@ int main() {
         ClearBackground(BLACK);
         for (int i = 0; i < 100; i++) {
           circles[i]->animate((std::rand() % 100) / 10000.0);
+          if (circles[i]->getProgress() >= 0.99) {
+           circles[i]->setReverse(true);
+          }
+          if (circles[i]->getProgress() <= 0.01) {
+           circles[i]->setReverse(false);
+          }
         }
         textColor.DrawText("Congrats! You created your first window!", 190, 200, 20);
         EndDrawing();

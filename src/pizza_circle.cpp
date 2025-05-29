@@ -1,5 +1,6 @@
 #include "Color.hpp"
 #include "raylib.h"
+#include <cerrno>
 #include <cmath>
 #include <enet/enet.h>
 #include <raylib-cpp.hpp>
@@ -14,6 +15,7 @@ Animators::PizzaCircle::PizzaCircle(raylib::Vector2 center, float radius, raylib
   this->progress = progress;
   this->progress_until_spin = progress_until_spin;
   this->segments = segments;
+  this->reverse = false;
 }
 
 void Animators::PizzaCircle::draw() {
@@ -24,13 +26,20 @@ void Animators::PizzaCircle::draw() {
     DrawLineV(center, raylib::Vector2(x, y), color);
   } else {
     float endAngle = Utils::map_value(progress, progress_until_spin, 1, 0, 360);
-//    endAngle = std::fmod(endAngle + starting_angle, 360);
     DrawCircleSector(center, radius, starting_angle, endAngle + starting_angle, 100, color);
   } 
 }
 
+float Animators::PizzaCircle::getProgress() {
+  return progress;
+}
+
+void Animators::PizzaCircle::setReverse(bool set) {
+  reverse = set;
+}
+
 void Animators::PizzaCircle::animate(float delta_progress) {
-  progress = std::fmod(progress + delta_progress, 1);
+  progress = std::fmod(progress + (reverse ? -delta_progress : delta_progress), 1);
   draw();
 }
 
